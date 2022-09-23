@@ -1,7 +1,5 @@
 package gsa
 
-import "fmt"
-
 type T struct {
 	Val         int
 	Left, Right *T
@@ -22,13 +20,11 @@ func InOrder(v *T) []int {
 	for len(stack) > 0 {
 		v = stack[len(stack)-1]
 		seen[v] = true
-		fmt.Println(v, v.Left, v.Right, v.Val)
 		//add v.Left to stack, use seen-map to avoid inf loop
 		if v.Left != nil && !seen[v.Left] {
 			stack = append(stack, v.Left)
 		} else {
 			//pop v from stack
-			fmt.Println(v)
 			result = append(result, v.Val)
 			stack = stack[:len(stack)-1]
 			//add v.Right to stack
@@ -45,5 +41,28 @@ func InOrder(v *T) []int {
 // Do a breadth-order traversal of v and output the
 // values in the tree.
 func BfOrder(v *T) []int {
-	return []int{}
+	queue := make([]*T, 0)
+	result := []int{}
+
+	if v == nil {
+		return result
+	}
+
+	queue = append(queue, v)
+	for len(queue) > 0 {
+		//dequeue
+		v = queue[0]
+		queue = queue[1:]
+		result = append(result, v.Val)
+
+		//add left to queue
+		if v.Left != nil {
+			queue = append(queue, v.Left)
+		}
+		//add right to queue
+		if v.Right != nil {
+			queue = append(queue, v.Right)
+		}
+	}
+	return result
 }
